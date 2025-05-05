@@ -1,0 +1,19 @@
+一、测试
+1、切换盘符
+cd C:\Users\HUAWEI\Desktop\story-app
+2、运行程序
+streamlit run story_generator.py
+二、操作github
+1、本地初始化
+文件夹右键-open GIT bash here
+
+git init
+echo "# My Project" > README.md
+git add README.md
+git commit -m "Add README"
+
+2、推送到github
+git remote add origin https://github.com/你的用户名/my-project.git
+git push -u origin main
+
+
