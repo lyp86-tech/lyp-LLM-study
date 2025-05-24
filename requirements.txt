@@ -3,3 +3,6 @@ langchain-openai>=0.1.0
 streamlit>=1.32.0
 python-dotenv>=1.0.0
 httpx[http2]>=0.25.0
+langchain==0.1.14
+langchain-experimental==0.0.55
+openai==1.12.0
