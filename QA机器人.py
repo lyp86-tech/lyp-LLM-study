@@ -18,6 +18,7 @@ def init_deepseek():
         proxies=None,  # 显式禁用代理
         timeout=30.0,
         transport=httpx.HTTPTransport(retries=3)
+    )
     
     return OpenAI(
         api_key="sk-ee72ed73b1bf4a2bbe867660fcfe52b2",
