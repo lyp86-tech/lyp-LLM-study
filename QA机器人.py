@@ -20,7 +20,7 @@ def init_deepseek():
         # 显式配置HTTP客户端
         http_client=httpx.Client(
             proxies=None,  # 禁用代理
-            transport=httpx.HTTPTransport(retries=3)
+            transport=httpx.HTTPTransport(retries=3))
     )
 
 # 数据加载模块
