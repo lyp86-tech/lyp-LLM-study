@@ -16,6 +16,7 @@ def init_deepseek():
     # 创建自定义HTTP客户端
     custom_client = httpx.Client(
         proxies=None,  # 显式禁用代理
+        trust_env=False,  # 新增：禁止读取环境变量代理配置
         timeout=30.0,
         transport=httpx.HTTPTransport(retries=3)
     )
