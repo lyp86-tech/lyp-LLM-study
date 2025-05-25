@@ -6,22 +6,25 @@ from langchain.prompts import PromptTemplate
 from openai import OpenAI
 from langchain_experimental.utilities import PythonREPL  
 import os
+import httpx
 
 # 设置页面布局
 st.set_page_config(page_title="Excel QA Robot", layout="wide")
 st.title("📊 Excel智能问答系统")
 
-# 初始化Deepseek模型
 def init_deepseek():
+    # 创建自定义HTTP客户端
+    custom_client = httpx.Client(
+        proxies=None,  # 显式禁用代理
+        timeout=30.0,
+        transport=httpx.HTTPTransport(retries=3)
+    
     return OpenAI(
-        #model="deepseek-chat",
         api_key="sk-ee72ed73b1bf4a2bbe867660fcfe52b2",
         base_url="https://api.deepseek.com/v1",
-        # 显式配置HTTP客户端
-        http_client=httpx.Client(
-            proxies=None,  # 禁用代理
-            transport=httpx.HTTPTransport(retries=3))
+        http_client=custom_client  # 使用自定义客户端
     )
+
 
 # 数据加载模块
 def load_data(uploaded_file):
