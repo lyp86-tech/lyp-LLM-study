@@ -10,7 +10,7 @@ import httpx
 
 # 设置页面布局
 st.set_page_config(page_title="Excel QA Robot", layout="wide")
-st.title("📊 Excel智能问答系统")
+st.title("📊 数据库问答系统")
 
 def init_deepseek():
     # 创建自定义HTTP客户端
@@ -109,8 +109,12 @@ def process_question(df, question, client):
     response = client.chat.completions.create(
         model="deepseek-chat",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.1
+        temperature=0.1,
+        #stream=True,  # 启用流式输出，但没找到方法
+        max_tokens=500
     )
+
+    
     # 提取并清洗代码
     raw_code = response.choices[0].message.content
     clean_code = raw_code.replace("```python", "").replace("```", "").strip()
@@ -126,19 +130,21 @@ def process_question(df, question, client):
         # 增强结果获取逻辑（修复点2）
         result = repl.locals.get('result')
         if result is None:
-            return "未生成有效结果，请确认代码包含：result = ..."
-        return result
+            return "未生成有效结果，请确认代码包含：result = ...", raw_code, clean_code
+        return result, raw_code, clean_code
     except Exception as e:
-        return f"执行错误: {str(e)}\n生成的代码：{clean_code}"
+        return f"执行错误: {str(e)}", raw_code, clean_code
 
 
 # 主界面布局
-col1, col2 = st.columns([3, 3])
+col1, col2 = st.columns([2, 2])
 
 with col1:
     st.header("❓ 提问区")
-    question = st.text_area("输入您的问题：", height=400)
-  
+    question = st.text_area("输入您的问题（注意表头名称一定要准确）：", height=400)
+#with col2:
+    #st.header("📝 分析区")
+    final_code_placeholder = st.empty()   # 用于显示最终完整代码
 with col2:
     st.header("💡 回答区")
     answer_placeholder = st.empty()
@@ -151,8 +157,9 @@ if uploaded_file and question:
             # 直接从session_state获取完整数据
             if st.session_state.full_data is not None:
                 client = init_deepseek()
-                result = process_question(st.session_state.full_data, question, client)
-                
+                result,raw_code,clean_code= process_question(st.session_state.full_data, question, client)   
+                #code_stream_placeholder = st.code(raw_code,language="python")
+                final_code_placeholder = st.code(clean_code, language="python")
                 if isinstance(result, pd.DataFrame):
                     answer_placeholder.dataframe(result)
                 else:
