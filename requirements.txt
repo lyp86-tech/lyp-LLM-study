@@ -1,3 +1,4 @@
+# 指定Python版本要求（可选）
 ;python_full_version >= '3.10.0' and python_full_version < '3.11.0'
 aiohappyeyeballs==2.4.4
 aiohttp==3.11.10
